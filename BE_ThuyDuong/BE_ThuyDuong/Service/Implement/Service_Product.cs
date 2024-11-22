@@ -111,10 +111,11 @@ namespace BE_ThuyDuong.Service.Implement
             product.Description = request.Description;
             product.Price = request.Price;
             product.Quantity = request.Quantity;
-            product.UrlImg = await cloudinaryService.ReplaceImage(product.UrlImg,request.UrlImg);
+           // product.UrlImg = await cloudinaryService.ReplaceImage(product.UrlImg,request.UrlImg);
+            product.UrlImg = await cloudinaryService.UploadImage(request.UrlImg);
             product.ProductTypeId = request.ProductTypeId;
             product.TrademarkId = request.TrademarkId;
-            dbContext.products.Add(product);
+            dbContext.products.Update(product);
             await dbContext.SaveChangesAsync();
             return responseObject.ResponseObjectSucces("Sửa sản phẩm thành công !", coverter_Product.EntityToDTO(product));
         }
