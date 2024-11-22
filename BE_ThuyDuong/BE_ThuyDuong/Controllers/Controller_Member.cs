@@ -1,4 +1,5 @@
 ﻿using BE_ThuyDuong.PayLoad.Request.Card;
+using BE_ThuyDuong.PayLoad.Request.Product;
 using BE_ThuyDuong.Service.Interface;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -20,6 +21,22 @@ namespace BE_ThuyDuong.Controllers
             this.service_Product = service_Product;
             this.service_Card = service_Card;
             this.service_HistotyPay = service_HistotyPay;
+        }
+
+        [HttpPost("CreateProduct")]
+        public async Task<IActionResult> CreateProduct(Request_CreateProduct request)
+        {
+            return Ok(await  service_Product.CreateProduct(request));
+        }
+        [HttpPut("UpdateProduct")]
+        public async Task<IActionResult> UpdateProduct(Request_UpdateProduct request)
+        {
+            return Ok(await service_Product.UpdateProduct(request));
+        }
+        [HttpDelete("DeleteProduct")]
+        public async Task<IActionResult> DeleteProduct(int productId)
+        {
+            return Ok(await service_Product.DeleteProduct(productId));
         }
 
         [HttpGet("GestListProduct")]

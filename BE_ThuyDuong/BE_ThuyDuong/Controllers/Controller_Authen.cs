@@ -28,10 +28,16 @@ namespace BE_ThuyDuong.Controllers
         {
             return Ok(await service_Authen.Login(request));
         }
-        [HttpGet("GetUserbyId")]
-        public async Task<IActionResult> GetUserbyId(int UserId)
+        [HttpGet("GetUserbyLogin")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<IActionResult> GetUserbyLogin()
         {
-            return Ok(await service_Authen.GetUserById(UserId));
+            if (!HttpContext.User.Identity.IsAuthenticated)
+            {
+                return Ok("Vui lòng đăng nhập !");
+            }
+            int id = int.Parse(HttpContext.User.FindFirst("Id").Value);
+            return Ok(await service_Authen.GetUserById(id));
         }
 
         [HttpGet("CheckRole")]
