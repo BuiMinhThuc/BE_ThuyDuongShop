@@ -8,6 +8,7 @@ namespace BE_ThuyDuong.Service.Interface
     public interface IService_Product
     {
         Task<IQueryable<DTO_Product>> GestListProducts(int pageSize, int pageNumbeer);
+        Task<IQueryable<DTO_Product>> SearchProducts(string keyword,int pageSize, int pageNumbeer);
         Task<ResponseObject<DTO_Product>> CreateProduct(Request_CreateProduct request);
         Task<ResponseObject<DTO_Product>> UpdateProduct(Request_UpdateProduct request);
         Task<ResponseBase> DeleteProduct(int productId);

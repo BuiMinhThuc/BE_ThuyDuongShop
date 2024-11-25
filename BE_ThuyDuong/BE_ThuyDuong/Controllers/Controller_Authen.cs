@@ -1,4 +1,5 @@
-﻿using BE_ThuyDuong.PayLoad.Request.Authen;
+﻿using BE_ThuyDuong.PayLoad.DTO;
+using BE_ThuyDuong.PayLoad.Request.Authen;
 using BE_ThuyDuong.Service.Interface;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -28,6 +29,12 @@ namespace BE_ThuyDuong.Controllers
         {
             return Ok(await service_Authen.Login(request));
         }
+        [HttpPost("RenewToken")]
+        public async Task<IActionResult> RenewToken(DTO_Token request)
+        {
+            return Ok(await service_Authen.RenewAccessToken(request));
+        }
+
         [HttpGet("GetUserbyLogin")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> GetUserbyLogin()

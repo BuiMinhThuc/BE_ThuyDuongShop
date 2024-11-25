@@ -15,6 +15,7 @@ using static System.Net.WebRequestMethods;
 
 using Microsoft.Extensions.Configuration;
 using BE_ThuyDuong.PayLoad.Converter;
+using System.Text;
 
 namespace BE_ThuyDuong.Service.Implement
 {
@@ -36,7 +37,49 @@ namespace BE_ThuyDuong.Service.Implement
             this.responseObjectToken = responseObjectToken;
             this.responseObject = responseObject;
         }
+        public async Task<ResponseObject<DTO_Token>> RenewAccessToken(DTO_Token request)
+        {
+            var jwtTokenHandler = new JwtSecurityTokenHandler();
+            var secretKeyBytes = Encoding.UTF8.GetBytes(configuration.GetSection("AppSettings:SecretKey").Value);
 
+            var tokenValidation = new TokenValidationParameters
+            {
+                ValidateIssuerSigningKey = true,
+                ValidateAudience = false,
+                ValidateIssuer = false,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration.GetSection("AppSettings:SecretKey").Value))
+            };
+
+            try
+            {
+                var tokenAuthentication = jwtTokenHandler.ValidateToken(request.AccessToken, tokenValidation, out var validatedToken);
+                if (validatedToken is not JwtSecurityToken jwtSecurityToken || jwtSecurityToken.Header.Alg != SecurityAlgorithms.HmacSha256)
+                {
+                    return responseObjectToken.ResponseObjectError(StatusCodes.Status400BadRequest, "Token không hợp lệ", null);
+                }
+                RefreshToken refreshToken = await dbContext.refreshTokens.FirstOrDefaultAsync(x => x.Token == request.RefreshToken);
+                if (refreshToken == null)
+                {
+                    return responseObjectToken.ResponseObjectError(StatusCodes.Status404NotFound, "RefreshToken không tồn tại trong database", null);
+                }
+                if (refreshToken.Exprited < DateTime.Now)
+                {
+                    return responseObjectToken.ResponseObjectError(StatusCodes.Status401Unauthorized, "Token chưa hết hạn", null);
+                }
+                var user = dbContext.users.FirstOrDefault(x => x.Id == refreshToken.UserId);
+                if (user == null)
+                {
+                    return responseObjectToken.ResponseObjectError(StatusCodes.Status404NotFound, "Người dùng không tồn tại", null);
+                }
+                var newToken = GenerateAccessToken(user);
+
+                return responseObjectToken.ResponseObjectSucces("Làm mới token thành công", newToken);
+            }
+            catch (Exception ex)
+            {
+                return responseObjectToken.ResponseObjectError(StatusCodes.Status500InternalServerError, ex.Message, null);
+            }
+        }
         private string GenerateRefreshToken()
         {
             var random = new byte[32];

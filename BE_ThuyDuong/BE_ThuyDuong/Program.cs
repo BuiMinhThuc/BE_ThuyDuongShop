@@ -1,4 +1,5 @@
 ﻿using BE_ThuyDuong.DataContext;
+using BE_ThuyDuong.Interfaces;
 using BE_ThuyDuong.PayLoad.Converter;
 using BE_ThuyDuong.PayLoad.DTO;
 using BE_ThuyDuong.PayLoad.Response;
@@ -8,10 +9,11 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using QLKS_v1.Implements;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
-
+//v1
 
 //Ket noi database
 builder.Services.AddDbContext<AppDbContext>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -87,6 +89,7 @@ builder.Services.AddScoped<IService_Product, Service_Product>();
 builder.Services.AddScoped<IService_Card, Service_Card>();
 builder.Services.AddScoped<IService_HistotyPay, Service_HistoryPay>();
 builder.Services.AddScoped<IService_Product, Service_Product>();
+builder.Services.AddScoped<IVNPayService, VNPayService>();
 
 
 

@@ -11,5 +11,6 @@ namespace BE_ThuyDuong.Service.Interface
   /*      Task<ResponseBase> SendOtpForEmail(string email);*/
         Task<ResponseObject<DTO_Token>> Login(Request_Login request);
         Task<ResponseObject<DTO_User>> GetUserById(int UserId);
+       Task<ResponseObject<DTO_Token>> RenewAccessToken(DTO_Token request);
     }
 }

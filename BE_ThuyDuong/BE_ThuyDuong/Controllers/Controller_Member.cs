@@ -1,10 +1,12 @@
-﻿using BE_ThuyDuong.PayLoad.Request.Card;
+﻿using BE_ThuyDuong.Interfaces;
+using BE_ThuyDuong.PayLoad.Request.Card;
 using BE_ThuyDuong.PayLoad.Request.Product;
 using BE_ThuyDuong.Service.Interface;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using QLKS_v1.Implements;
 
 namespace BE_ThuyDuong.Controllers
 {
@@ -15,12 +17,33 @@ namespace BE_ThuyDuong.Controllers
         private readonly IService_Product service_Product;
         private readonly IService_Card service_Card;
         private readonly IService_HistotyPay service_HistotyPay;
+        private readonly BE_ThuyDuong.Interfaces.IVNPayService vNPayService;
 
-        public Controller_Member(IService_Product service_Product, IService_Card service_Card, IService_HistotyPay service_HistotyPay)
+        public Controller_Member(IService_Product service_Product, IService_Card service_Card, IService_HistotyPay service_HistotyPay, IVNPayService vNPayService)
         {
             this.service_Product = service_Product;
             this.service_Card = service_Card;
             this.service_HistotyPay = service_HistotyPay;
+            this.vNPayService = vNPayService;
+        }
+
+        [HttpPost("GetLinkVnPay")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<IActionResult> GetLinkVnPay([FromRoute] int hoaDonId )
+        {
+            if (!HttpContext.User.Identity.IsAuthenticated)
+            {
+                return Ok("Vui lòng đăng nhập !");
+            }
+            int id = int.Parse(HttpContext.User.FindFirst("Id").Value);
+            return Ok(await vNPayService.TaoDuongDanThanhToan(hoaDonId, HttpContext,id));
+        }
+        [HttpGet("Return")]
+        public async Task<IActionResult> Return()
+        {
+            var vnpayData = HttpContext.Request.Query;
+
+            return Redirect(await vNPayService.VNPayReturn(vnpayData));
         }
 
         [HttpPost("CreateProduct")]
@@ -42,6 +65,11 @@ namespace BE_ThuyDuong.Controllers
         [HttpGet("GestListProduct")]
         public async Task<IActionResult> GestListProduct(int pageSize =7, int pageNumber =1) {
             return Ok(await service_Product.GestListProducts(pageSize, pageNumber));
+        }
+        [HttpGet("SearchProduct")]
+        public async Task<IActionResult> SearchProduct(string keyword,int pageSize = 7, int pageNumber = 1)
+        {
+            return Ok(await service_Product.SearchProducts(keyword,pageSize, pageNumber));
         }
         [HttpGet("GestListCardForUserId")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
