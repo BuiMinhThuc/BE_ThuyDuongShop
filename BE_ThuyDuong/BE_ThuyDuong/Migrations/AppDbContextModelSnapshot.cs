@@ -22,6 +22,30 @@ namespace BE_ThuyDuong.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("BE_ThuyDuong.Entities.Bill", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime?>("CreateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<decimal?>("TotalPrice")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("bills");
+                });
+
             modelBuilder.Entity("BE_ThuyDuong.Entities.Card", b =>
                 {
                     b.Property<int>("Id")
@@ -77,7 +101,7 @@ namespace BE_ThuyDuong.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("somfirmEmails");
+                    b.ToTable("comfirmEmails");
                 });
 
             modelBuilder.Entity("BE_ThuyDuong.Entities.HistorryPay", b =>
@@ -88,16 +112,21 @@ namespace BE_ThuyDuong.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("BillId")
+                        .HasColumnType("int");
+
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
 
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
-                    b.Property<int>("UserId")
+                    b.Property<int?>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("BillId");
 
                     b.HasIndex("ProductId");
 
@@ -235,20 +264,28 @@ namespace BE_ThuyDuong.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("Address")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FullName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PassWord")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("RoleId")
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("RoleId")
                         .HasColumnType("int");
+
+                    b.Property<string>("UrlAvt")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserName")
                         .IsRequired()
@@ -259,6 +296,17 @@ namespace BE_ThuyDuong.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("users");
+                });
+
+            modelBuilder.Entity("BE_ThuyDuong.Entities.Bill", b =>
+                {
+                    b.HasOne("BE_ThuyDuong.Entities.User", "User")
+                        .WithMany("Bills")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("BE_ThuyDuong.Entities.Card", b =>
@@ -293,21 +341,25 @@ namespace BE_ThuyDuong.Migrations
 
             modelBuilder.Entity("BE_ThuyDuong.Entities.HistorryPay", b =>
                 {
+                    b.HasOne("BE_ThuyDuong.Entities.Bill", "Bill")
+                        .WithMany("HistorryPays")
+                        .HasForeignKey("BillId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("BE_ThuyDuong.Entities.Product", "Product")
                         .WithMany("HistorryPays")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BE_ThuyDuong.Entities.User", "User")
+                    b.HasOne("BE_ThuyDuong.Entities.User", null)
                         .WithMany("HistorryPays")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("Bill");
 
                     b.Navigation("Product");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("BE_ThuyDuong.Entities.Product", b =>
@@ -344,11 +396,14 @@ namespace BE_ThuyDuong.Migrations
                 {
                     b.HasOne("BE_ThuyDuong.Entities.Role", "Role")
                         .WithMany("Users")
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("RoleId");
 
                     b.Navigation("Role");
+                });
+
+            modelBuilder.Entity("BE_ThuyDuong.Entities.Bill", b =>
+                {
+                    b.Navigation("HistorryPays");
                 });
 
             modelBuilder.Entity("BE_ThuyDuong.Entities.Product", b =>
@@ -375,6 +430,8 @@ namespace BE_ThuyDuong.Migrations
 
             modelBuilder.Entity("BE_ThuyDuong.Entities.User", b =>
                 {
+                    b.Navigation("Bills");
+
                     b.Navigation("Cards");
 
                     b.Navigation("ComfirmEmails");

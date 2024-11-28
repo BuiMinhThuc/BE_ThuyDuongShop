@@ -209,6 +209,7 @@ namespace BE_ThuyDuong.Service.Implement
 
             User user = new User();
             user.UserName = request.Username;
+            user.Address = request.Address??null;
             user.FullName = request.FullName??null;
             user.PassWord = BCrypt.Net.BCrypt.HashPassword(request.Password);
             user.PhoneNumber= request.PhoneNumber?? null;

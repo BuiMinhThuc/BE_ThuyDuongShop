@@ -21,8 +21,8 @@ namespace BE_ThuyDuong.PayLoad.Converter
             {
                 Id = historryPay.Id,
                 ProductName= dbContext.historryPays.Include(x=>x.Product).Select(x=>x.Product.NameProduct).FirstOrDefault(),
-                UserId=historryPay.UserId,
-                CreateTime=historryPay.CreatedDate,
+               
+            
                 Quantity=historryPay.Quantity,
                 TotalPrice = dbContext.historryPays.Include(x => x.Product).Select(x => x.Product.Price).FirstOrDefault()* historryPay.Quantity,
                 

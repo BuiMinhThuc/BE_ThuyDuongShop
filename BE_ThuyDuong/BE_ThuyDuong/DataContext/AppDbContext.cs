@@ -1,5 +1,6 @@
 ﻿using BE_ThuyDuong.Entities;
 using Microsoft.EntityFrameworkCore;
+using BE_ThuyDuong.Entities;
 using System.Data;
 
 namespace BE_ThuyDuong.DataContext
@@ -21,6 +22,7 @@ namespace BE_ThuyDuong.DataContext
         public DbSet<Role> roles { get; set; }
         public DbSet<Trademark> trademarks { get; set; }
         public DbSet<User> users { get; set; }
+        public DbSet<Bill> bills { get; set; }
     
 
 

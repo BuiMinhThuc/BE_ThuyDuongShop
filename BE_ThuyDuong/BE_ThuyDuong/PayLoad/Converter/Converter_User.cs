@@ -15,6 +15,7 @@ namespace BE_ThuyDuong.PayLoad.Converter
                 PhoneNumber = user.PhoneNumber,
                 RoleId = user.RoleId,
                 UrlAvt = user.UrlAvt,
+                Address = user.Address,
             };
     }
 }

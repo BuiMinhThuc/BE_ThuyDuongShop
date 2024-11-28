@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "RpkZM2pLny4HMj0o2oyjxyjR9E5my3O2KvQh+Rbmp/fXJdgMAeeP0xNJZqgDwatDQtrJauL5bptGNnnjXIckig==",
+  "dgSpecHash": "glow+BvVvrx96WcIjfGxrWSCWyQunJhR195bgpCr6gR8eUtTXtp42eUXDRNGkGqzQ98Urfw47TX2v+O8Q4/Nmw==",
   "success": true,
-  "projectFilePath": "C:\\Users\\buimi\\Documents\\CODE\\C#\\Tự Học\\BE_ThuyDuong\\BE_ThuyDuong\\SammiShop.csproj",
+  "projectFilePath": "C:\\Users\\buimi\\Documents\\CODE\\C#\\Tự Học\\BE_ThuyDuong\\BE_ThuyDuong\\BE_ThuyDuong.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\buimi\\.nuget\\packages\\azure.core\\1.38.0\\azure.core.1.38.0.nupkg.sha512",
     "C:\\Users\\buimi\\.nuget\\packages\\azure.identity\\1.11.4\\azure.identity.1.11.4.nupkg.sha512",

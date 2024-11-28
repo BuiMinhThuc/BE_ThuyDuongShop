@@ -1,12 +1,14 @@
 ﻿using BE_ThuyDuong.Interfaces;
 using BE_ThuyDuong.PayLoad.Request.Card;
+using BE_ThuyDuong.PayLoad.Request.HistoryPay;
 using BE_ThuyDuong.PayLoad.Request.Product;
 using BE_ThuyDuong.Service.Interface;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using QLKS_v1.Implements;
+using BE_ThuyDuong.Implements;
+using System.Collections.Generic;
 
 namespace BE_ThuyDuong.Controllers
 {
@@ -29,14 +31,14 @@ namespace BE_ThuyDuong.Controllers
 
         [HttpPost("GetLinkVnPay")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<IActionResult> GetLinkVnPay([FromRoute] int hoaDonId )
+        public async Task<IActionResult> GetLinkVnPay(/*[FromRoute]*/ List<Request_ListProductPay> request )
         {
             if (!HttpContext.User.Identity.IsAuthenticated)
             {
                 return Ok("Vui lòng đăng nhập !");
             }
             int id = int.Parse(HttpContext.User.FindFirst("Id").Value);
-            return Ok(await vNPayService.TaoDuongDanThanhToan(hoaDonId, HttpContext,id));
+            return Ok(await vNPayService.TaoDuongDanThanhToan(request, HttpContext,id));
         }
         [HttpGet("Return")]
         public async Task<IActionResult> Return()

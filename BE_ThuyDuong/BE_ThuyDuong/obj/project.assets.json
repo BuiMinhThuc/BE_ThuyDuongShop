@@ -7937,9 +7937,9 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\buimi\\Documents\\CODE\\C#\\Tự Học\\BE_ThuyDuong\\BE_ThuyDuong\\SammiShop.csproj",
-      "projectName": "SammiShop",
-      "projectPath": "C:\\Users\\buimi\\Documents\\CODE\\C#\\Tự Học\\BE_ThuyDuong\\BE_ThuyDuong\\SammiShop.csproj",
+      "projectUniqueName": "C:\\Users\\buimi\\Documents\\CODE\\C#\\Tự Học\\BE_ThuyDuong\\BE_ThuyDuong\\BE_ThuyDuong.csproj",
+      "projectName": "BE_ThuyDuong",
+      "projectPath": "C:\\Users\\buimi\\Documents\\CODE\\C#\\Tự Học\\BE_ThuyDuong\\BE_ThuyDuong\\BE_ThuyDuong.csproj",
       "packagesPath": "C:\\Users\\buimi\\.nuget\\packages\\",
       "outputPath": "C:\\Users\\buimi\\Documents\\CODE\\C#\\Tự Học\\BE_ThuyDuong\\BE_ThuyDuong\\obj\\",
       "projectStyle": "PackageReference",

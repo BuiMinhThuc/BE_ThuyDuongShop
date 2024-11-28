@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using QLKS_v1.Implements;
+using BE_ThuyDuong.Implements;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -103,6 +103,7 @@ builder.Services.AddScoped<BE_ThuyDuong.PayLoad.Converter.Coverter_Product>();
 
 builder.Services.AddScoped<ResponseBase>();
 builder.Services.AddScoped<ResponseObject<DTO_Token>>();
+builder.Services.AddScoped<ResponseObject<DTO_Bill>>();
 builder.Services.AddScoped<ResponseObject<DTO_Product>>();
 builder.Services.AddScoped<ResponseObject<DTO_User>>();
 builder.Services.AddScoped<ResponseObject<DTO_Trademark>>();
