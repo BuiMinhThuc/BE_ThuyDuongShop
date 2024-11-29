@@ -55,8 +55,12 @@ namespace BE_ThuyDuong.Service.Implement
                 .Skip((pageNumbeer-1)*pageSize)
                 .Take(pageSize)
                 .Select( x=>new DTO_Card
-                {   UrlImg= dbContext.products.Where(z=>z.Id==x.ProductId).Select(x=>x.UrlImg).FirstOrDefault(),
+                
+                {
+                    ID= x.Id,
+                    UrlImg= dbContext.products.Where(z=>z.Id==x.ProductId).Select(x=>x.UrlImg).FirstOrDefault(),
                     ProductName= dbContext.products.Where(y=>y.Id==x.ProductId).Select(y=>y.NameProduct).FirstOrDefault(),
+                    TotalPrice= dbContext.products.Where(y => y.Id == x.ProductId).Select(x=>x.Price*x.Quantity).FirstOrDefault(),
                     Quantity= x.Quantity
 
                 })
