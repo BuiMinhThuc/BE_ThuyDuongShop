@@ -1,4 +1,4 @@
-﻿namespace SammiShop.PayLoad.Request.Trademark
+﻿namespace BE_ThuyDuong.PayLoad.Request.Trademark
 {
     public class Request_UpdateTrademark
     {

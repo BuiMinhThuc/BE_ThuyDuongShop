@@ -37,6 +37,18 @@ namespace BE_ThuyDuong.Service.Implement
             return responseBase.ResponseBaseSucces("Thêm thành công !");
         }
 
+        public async Task<ResponseBase> DeleteCard(int CardId)
+        {
+            Card card = await dbContext.cards.FirstOrDefaultAsync(x => x.Id == CardId);
+            if(card == null)
+            {
+                return responseBase.ResponseBaseError(404, "Không tìm thấy sản phẩm này trong giỏ hàng !");
+            }
+            dbContext.cards.Remove(card);
+            await dbContext.SaveChangesAsync();
+            return responseBase.ResponseBaseSucces("xóa thành công !");
+        }
+
         public async Task<IQueryable<DTO_Card>> GestListCardForUserId(int userId, int pageSize, int pageNumbeer)
         {
             return await Task.FromResult(dbContext.cards.Where(x=>x.UserId==userId)

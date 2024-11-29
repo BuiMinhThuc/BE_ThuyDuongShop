@@ -34,7 +34,16 @@ namespace BE_ThuyDuong.Controllers
         {
             return Ok(await service_Authen.RenewAccessToken(request));
         }
-
+        [HttpPost("GetOtpforGetPassword")]
+        public async Task<IActionResult> GetOtpforGetPassword(string email)
+        {
+            return Ok(await service_Authen.SendOtpForEmail(email));
+        }
+        [HttpPut("getPassword")]
+        public async Task<IActionResult> getPassword(Request_GetPassword request)
+        {
+            return Ok(await service_Authen.GetPassword(request));
+        }
         [HttpGet("GetUserbyLogin")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> GetUserbyLogin()
@@ -47,7 +56,7 @@ namespace BE_ThuyDuong.Controllers
             return Ok(await service_Authen.GetUserById(id));
         }
 
-        [HttpGet("CheckRole")]
+       /* [HttpGet("CheckRole")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> CheckRole()
         {
@@ -60,7 +69,7 @@ namespace BE_ThuyDuong.Controllers
             string Role = HttpContext.User.FindFirst("RoleId").Value;
 
             return Ok($"{id} đăng nhập với quyền là  {Role}!");
-        }
+        }*/
         [HttpPut("ChangePassword")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> ChangePassword(Request_ChangePassWord request)

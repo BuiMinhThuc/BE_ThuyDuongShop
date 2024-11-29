@@ -8,7 +8,8 @@ namespace BE_ThuyDuong.Service.Interface
     {
         Task<ResponseBase> Register(Request_Register request);
         Task<ResponseBase> ChangePassword(int UserId, Request_ChangePassWord request);
-  /*      Task<ResponseBase> SendOtpForEmail(string email);*/
+       Task<ResponseBase> SendOtpForEmail(string email);
+       Task<ResponseBase> GetPassword(Request_GetPassword request);
         Task<ResponseObject<DTO_Token>> Login(Request_Login request);
         Task<ResponseObject<DTO_User>> GetUserById(int UserId);
        Task<ResponseObject<DTO_Token>> RenewAccessToken(DTO_Token request);

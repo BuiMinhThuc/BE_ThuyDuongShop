@@ -8,5 +8,6 @@ namespace BE_ThuyDuong.Service.Interface
     {
         Task<IQueryable<DTO_Card>> GestListCardForUserId(int userId,int pageSize, int pageNumbeer);
         Task<ResponseBase> AddCard(int UserId, Request_AddCard request);
+        Task<ResponseBase> DeleteCard(int CardId);
     }
 }

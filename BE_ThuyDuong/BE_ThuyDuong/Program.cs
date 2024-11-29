@@ -91,11 +91,13 @@ builder.Services.AddScoped<IService_HistotyPay, Service_HistoryPay>();
 builder.Services.AddScoped<IService_Product, Service_Product>();
 builder.Services.AddScoped<IVNPayService, VNPayService>();
 builder.Services.AddScoped<IService_Trademark, Service_Trademark>();
+builder.Services.AddScoped<IService_ProductType, Service_ProductType>();
 
 
 
 
 builder.Services.AddScoped<Converter_User>();
+builder.Services.AddScoped<Converter_ProductType>();
 builder.Services.AddScoped<Converter_Trademark>();
 builder.Services.AddScoped<Converter_Historypay>();
 builder.Services.AddScoped<BE_ThuyDuong.PayLoad.Converter.Coverter_Product>();
@@ -103,6 +105,7 @@ builder.Services.AddScoped<BE_ThuyDuong.PayLoad.Converter.Coverter_Product>();
 
 builder.Services.AddScoped<ResponseBase>();
 builder.Services.AddScoped<ResponseObject<DTO_Token>>();
+builder.Services.AddScoped<ResponseObject<DTO_ProductType>>();
 builder.Services.AddScoped<ResponseObject<DTO_Bill>>();
 builder.Services.AddScoped<ResponseObject<DTO_Product>>();
 builder.Services.AddScoped<ResponseObject<DTO_User>>();

@@ -1,7 +1,7 @@
 ﻿using BE_ThuyDuong.PayLoad.DTO;
 using BE_ThuyDuong.PayLoad.Request.Trademark;
 using BE_ThuyDuong.PayLoad.Response;
-using SammiShop.PayLoad.Request.Trademark;
+using BE_ThuyDuong.PayLoad.Request.Trademark;
 
 namespace BE_ThuyDuong.Service.Interface
 {

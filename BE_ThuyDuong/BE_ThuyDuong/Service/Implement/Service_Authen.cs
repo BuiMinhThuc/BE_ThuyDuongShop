@@ -105,6 +105,7 @@ namespace BE_ThuyDuong.Service.Implement
                     new Claim(ClaimTypes.Email, user.Email),
                     new Claim("Username", user.UserName.ToString()),
                     new Claim("RoleId", user.RoleId.ToString()),
+                    
                     //new Claim("UrlAvatar", user.UrlAvatar.ToString()),
                     new Claim("FullName", user.FullName.ToString()),
                     new Claim(ClaimTypes.Role, decentralization?.KeyRole ?? "")
@@ -189,6 +190,11 @@ namespace BE_ThuyDuong.Service.Implement
             {
                 return responseBase.ResponseBaseError(StatusCodes.Status400BadRequest, "Email không hợp lệ !");
             }
+            var checkemail= await dbContext.users.FirstOrDefaultAsync(x=>x.Email==request.Email);
+            if(checkemail != null)
+            {
+                return responseBase.ResponseBaseError(StatusCodes.Status400BadRequest, "Email đã được sử dụng rồi, vui lòng chọn email khác !");
+            }
             if(request.UrlAvt != null)
                 if (!CheckInput.IsImage(request.UrlAvt))
                 {
@@ -199,13 +205,14 @@ namespace BE_ThuyDuong.Service.Implement
             string imgNull = "https://media.istockphoto.com/id/1300845620/vector/user-icon-flat-isolated-on-white-background-user-symbol-vector-illustration.jpg?s=612x612&w=0&k=20&c=yBeyba0hUkh14_jgv1OKqIH0CCSWU_4ckRkAoy2p73o=";
            
             EmailTo emailTo = new EmailTo();
-            emailTo.Subject = "Thùy Dương Shop !";
+            emailTo.Subject = "XÁC NHẬN ĐĂNG KÍ SAMMISHOP !";
             emailTo.Mail = request.Email;
             Random random = new Random();
             int otp = random.Next(1000, 9999);
-            emailTo.Content = $"Đây là mã kích hoạt tài khoản của bạn, mã sẽ hết hạn sau 5 phút :\n ThuyDuongShop@{otp} ";
-            await emailTo.SendEmailAsync(emailTo);
-
+            emailTo.Content = $"Đây là mã kích hoạt tài khoản của bạn, mã sẽ hết hạn sau 5 phút :\n SammiShop@{otp} ";
+           var checkEmailv1= await emailTo.SendEmailAsync(emailTo);
+            if( checkEmailv1 != "Gửi email thành công" ) { return responseBase.ResponseBaseError(StatusCodes.Status400BadRequest, "Email không hợp lệ !"); }
+            Console.WriteLine(checkEmailv1);
 
             User user = new User();
             user.UserName = request.Username;
@@ -225,7 +232,7 @@ namespace BE_ThuyDuong.Service.Implement
             ComfirmEmail comfirmEmail = new ComfirmEmail();
             comfirmEmail.UserId = user.Id;
             comfirmEmail.Email = request.Email;
-            comfirmEmail.Otp = $"ThuyDuongShop@{otp}";
+            comfirmEmail.Otp = $"SammiShop@{otp}";
             comfirmEmail.Exprited=DateTime.Now.AddMinutes(5);
             comfirmEmail.Status = false;
             dbContext.comfirmEmails.Add(comfirmEmail);
@@ -267,27 +274,57 @@ namespace BE_ThuyDuong.Service.Implement
             return responseBase.ResponseBaseSucces("Đổi mật khẩu thành công !");
         }
 
-     /*   public async Task<ResponseBase> SendOtpForEmail(string email)
+        public async Task<ResponseBase> SendOtpForEmail(string email)
         {
             bool EmailInput = CheckInput.IsValiEmail(email);
             if (!EmailInput)
             {
                 return responseBase.ResponseBaseError(StatusCodes.Status400BadRequest, "Email không hợp lệ !");
             }
+            var checkemail= await dbContext.comfirmEmails.FirstOrDefaultAsync(x=>x.Email==email);
+            if(checkemail==null)
+            {
+                return responseBase.ResponseBaseError(StatusCodes.Status400BadRequest, "Email này chưa đăng kí tài khoản !");
 
-
-            EmailTo emailTo = new EmailTo();
-            emailTo.Subject = "Thùy Dương Shop !";
+            }
+            var emailTo = new EmailTo();
+            emailTo.Subject = "MÃ XÁC NHẬN SAMMISHOP";
             emailTo.Mail = email;
             Random random = new Random();
             int otp = random.Next(1000, 9999);
-            emailTo.Content = $"Đây là mã lấy lại mật khẩu của bạn, mã sẽ hết hạn sau 5 phút :\n ThuyDuongShop@{otp} ";
+            emailTo.Content = $"Đây là mãlấy lại mật khẩu của bạn, mã sẽ hết hạn sau 5 phút :\n SammiShop@{otp} ";
             await emailTo.SendEmailAsync(emailTo);
+            checkemail.Otp = $"SammiShop@{otp}";
+            checkemail.Exprited=DateTime.Now.AddMinutes(5);
+            dbContext.comfirmEmails.Update(checkemail);
+            await dbContext.SaveChangesAsync();
+            return responseBase.ResponseBaseSucces("Gửi mã thành công !");
+
+        }
+
+        public async Task<ResponseBase> GetPassword(Request_GetPassword request)
+        {
+            var comfirmEmail = await dbContext.comfirmEmails.FirstOrDefaultAsync(x => x.Otp == request.otp);
+            if(comfirmEmail==null)
+            {
+                return responseBase.ResponseBaseError(400, "Mã xác nhận không hợp lệ !");
+            }
+            if(request.passwordnew!= request.passwordnewComfirm)
+            {
+                return responseBase.ResponseBaseError(400, "Mật khẩu xác nhận không trùng khớp !");
+            }
+            string PassInput = CheckInput.IsPassWord(request.passwordnew);
+            if (PassInput != request.passwordnew)
+            {
+                return responseBase.ResponseBaseError(StatusCodes.Status400BadRequest, PassInput);
+            }
+            var user = await dbContext.users.FirstOrDefaultAsync(x => x.Id == comfirmEmail.UserId);
+            user.PassWord = BCrypt.Net.BCrypt.HashPassword(request.passwordnew);
+            dbContext.users.Update(user);
+            await dbContext.SaveChangesAsync();
+            return responseBase.ResponseBaseSucces("Cập nhật mật khẩu thành công !");
 
 
-
-
-            dbContext.comfirmEmails.Add()
-        }*/
+        }
     }
 }

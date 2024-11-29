@@ -15,13 +15,13 @@ namespace BE_ThuyDuong.Handle
             var smtpClient = new SmtpClient("smtp.gmail.com")
             {
                 Port = 587,
-                Credentials = new NetworkCredential("buiminhthucvv2002@gmail.com", "rhum rqpf hvvm pbca"),
+                Credentials = new NetworkCredential("thuyduongshopv1@gmail.com", "trvi gfdz nnly ilnp"),
                 EnableSsl = true
             };
             try
             {
                 var message = new MailMessage();
-                message.From = new MailAddress("buiminhthucvv2002@gmail.com");
+                message.From = new MailAddress("thuyduongshopv1@gmail.com");
                 message.To.Add(emailTo.Mail);
                 message.Subject = emailTo.Subject;
                 message.Body = emailTo.Content;
@@ -34,6 +34,17 @@ namespace BE_ThuyDuong.Handle
             {
                 return "Lỗi khi gửi email: " + ex.Message;
             }
+        }
+        public async Task<string> CheckEmailExistence(string email)
+        {
+            var client = new HttpClient();
+            var apiKey = "your_api_key_here";  // Thay bằng API Key của bạn
+            var url = $"https://api.hunter.io/v2/email-verifier?email={email}&api_key={apiKey}";
+
+            var response = await client.GetAsync(url);
+            var responseContent = await response.Content.ReadAsStringAsync();
+
+            return responseContent;  // Phản hồi trả về sẽ cho bạn biết email có hợp lệ hay không
         }
 
     }
