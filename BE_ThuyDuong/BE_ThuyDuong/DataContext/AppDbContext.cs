@@ -23,6 +23,7 @@ namespace BE_ThuyDuong.DataContext
         public DbSet<Trademark> trademarks { get; set; }
         public DbSet<User> users { get; set; }
         public DbSet<Bill> bills { get; set; }
+        public DbSet<Feedback> feedbacks { get; set; }
     
 
 

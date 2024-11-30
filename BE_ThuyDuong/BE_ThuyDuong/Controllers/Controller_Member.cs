@@ -95,17 +95,7 @@ namespace BE_ThuyDuong.Controllers
             return Ok(await service_Card.AddCard(id,request));
         }
 
-        [HttpGet("GestListHistoryPayByUserId")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<IActionResult> GestListHistoryPayByUserId(int pageSize = 7, int pageNumber = 1)
-        {
-            if (!HttpContext.User.Identity.IsAuthenticated)
-            {
-                return BadRequest("Vui lòng đăng nhập !");
-            }
-            int id = int.Parse(HttpContext.User.FindFirst("Id").Value);
-            return Ok(await service_HistotyPay.GetListHistoryByUserId(id, pageSize, pageNumber));
-        }
+       
 
 
     }

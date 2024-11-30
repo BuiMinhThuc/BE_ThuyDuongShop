@@ -7,6 +7,7 @@ namespace BE_ThuyDuong.Service.Interface
     public interface IService_HistotyPay
     {
         Task<IQueryable<DTO_HistoryPay>> GetListHistoryByUserId(int userId, int pageSize, int pageNumber);
+        Task<IQueryable<DTO_HistoryPay>> GetFullListHistory( int pageSize, int pageNumber);
        /* Task<ResponseBase> CreateHistoryPay(int UserId,List<Request_ListProductPay> request);*/
 
     }

@@ -16,6 +16,7 @@ using static System.Net.WebRequestMethods;
 using Microsoft.Extensions.Configuration;
 using BE_ThuyDuong.PayLoad.Converter;
 using System.Text;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace BE_ThuyDuong.Service.Implement
 {
@@ -325,6 +326,43 @@ namespace BE_ThuyDuong.Service.Implement
             return responseBase.ResponseBaseSucces("Cập nhật mật khẩu thành công !");
 
 
+        }
+
+        public async Task<ResponseObject<DTO_User>> EditRoletUser(Request_EditRoleUser request)
+        {
+            var user = await dbContext.users.FirstOrDefaultAsync(x => x.Id == request.UserId);
+            if(user==null)
+            {
+                return responseObject.ResponseObjectError(StatusCodes.Status404NotFound,"User Id không tồn tại !",null);
+            }
+            user.RoleId = request.RoleId;
+            dbContext.users.Update(user) ;
+            await dbContext.SaveChangesAsync();
+
+            return responseObject.ResponseObjectSucces("Sửa quyền tài khoản thành công !",converter_User.EntityToDTO(user));
+
+        }
+
+        public async Task<IQueryable<DTO_User>> SearchUser(string Key, int pageSize, int pageNumber)
+        {
+            return await Task.FromResult(dbContext.users.OrderByDescending(x => x.Id).Where(x=>x.UserName.Contains(Key) || x.FullName.Contains(Key))
+                .Skip((pageNumber - 1) * pageSize).Take(pageSize).Select(x => converter_User.EntityToDTO(x)));
+        }
+
+        public async Task<IQueryable<DTO_User>> GetFullListUser(int pageSize, int pageNumber)
+        {
+            return await Task.FromResult(dbContext.users.OrderByDescending(x => x.Id)
+                .Skip((pageNumber - 1) * pageSize).Take(pageSize).Select(x => converter_User.EntityToDTO(x)));
+        }
+
+        public async Task<IQueryable<DTO_Role>> GetFullListRole()
+        {
+            return await Task.FromResult(dbContext.roles
+               .Select(x => new DTO_Role
+               {
+                   Id = x.Id,
+                   NameRole = x.KeyRole,
+               }));
         }
     }
 }

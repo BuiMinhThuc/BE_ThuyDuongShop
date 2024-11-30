@@ -18,6 +18,7 @@ namespace BE_ThuyDuong.Entities
         public ICollection<ComfirmEmail>? ComfirmEmails { get; set; }
         public ICollection<RefreshToken>? RefreshTokens { get; set; }
         public ICollection<Card>? Cards { get; set; }
+        public ICollection<Feedback>? Feedbacks { get; set; }
      
 
 

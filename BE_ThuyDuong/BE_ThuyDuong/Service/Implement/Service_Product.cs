@@ -84,7 +84,7 @@ namespace BE_ThuyDuong.Service.Implement
 
         public async Task<IQueryable<DTO_Product>> SearchProducts(string keyword, int pageSize, int pageNumbeer)
         {
-            return await Task.FromResult(dbContext.products.Where(x=>x.NameProduct.Contains(keyword)).Skip((pageNumbeer - 1) * pageSize).Take(pageSize).Select(x => coverter_Product.EntityToDTO(x)));
+            return await Task.FromResult(dbContext.products.OrderByDescending(x => x.Id).Where(x=>x.NameProduct.Contains(keyword)).Skip((pageNumbeer - 1) * pageSize).Take(pageSize).Select(x => coverter_Product.EntityToDTO(x)));
         }
 
         public async Task<ResponseObject<DTO_Product>> UpdateProduct(Request_UpdateProduct request)

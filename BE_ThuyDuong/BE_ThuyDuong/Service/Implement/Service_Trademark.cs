@@ -55,7 +55,7 @@ namespace BE_ThuyDuong.Service.Implement
 
         public async Task<IQueryable<DTO_Trademark>> GetFullList(int pageSize, int pageNumber)
         {
-            return await Task.FromResult(dbContext.trademarks.Skip((pageNumber-1)*pageSize).Take(pageSize).Select(x=>converter_Trademark.EntityToDTO(x)));
+            return await Task.FromResult(dbContext.trademarks.OrderByDescending(x => x.Id).Skip((pageNumber-1)*pageSize).Take(pageSize).Select(x=>converter_Trademark.EntityToDTO(x)));
         }
 
         /*public async Task<IQueryable<DTO_Trademark>> GetListForKey(string Key, int pageSize, int pageNumber)

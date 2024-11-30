@@ -80,11 +80,71 @@ namespace BE_ThuyDuong.Controllers
                 return Ok("Vui lòng đăng nhập !");
             }
             int id = int.Parse(HttpContext.User.FindFirst("Id").Value);
-            return Ok(service_Authen.ChangePassword(id, request));
+            return Ok(await service_Authen.ChangePassword(id, request));
+        }
+        [HttpPut("EditRoleUser")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<IActionResult> EditRoleUser(Request_EditRoleUser request)
+        {
+
+            if (!HttpContext.User.Identity.IsAuthenticated)
+            {
+                return Ok("Vui lòng đăng nhập !");
+            }
+            // Kiểm tra nếu không phải admin
+            if (!User.IsInRole("Admin"))
+            {
+                return Ok("Bạn không có quyền thực hiện hành động này.");
+            }
+            return Ok(await service_Authen.EditRoletUser(request));
         }
 
+        [HttpGet("SearchUser")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<IActionResult> SearchUser(string Key, int pageSize =10, int pageNumber =1)
+        {
+            if (!HttpContext.User.Identity.IsAuthenticated)
+            {
+                return Ok("Vui lòng đăng nhập !");
+            }
+            if (!User.IsInRole("Admin"))
+            {
+                return Ok("Bạn không có quyền thực hiện hành động này.");
+            }
+          
+            return Ok(await service_Authen.SearchUser(Key, pageSize,pageNumber));
+        }
 
+        [HttpGet("SearchUsGetFullListUserer")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<IActionResult> GetFullListUser( int pageSize = 10, int pageNumber = 1)
+        {
+            if (!HttpContext.User.Identity.IsAuthenticated)
+            {
+                return Ok("Vui lòng đăng nhập !");
+            }
+            if (!User.IsInRole("Admin"))
+            {
+                return Ok("Bạn không có quyền thực hiện hành động này.");
+            }
 
+            return Ok(await service_Authen.GetFullListUser( pageSize, pageNumber));
+        }
+        [HttpGet("GetFullListRole")]
+ /*       [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]*/
+        public async Task<IActionResult> GetFullListRole()
+        {
+            /*if (!HttpContext.User.Identity.IsAuthenticated)
+            {
+                return Ok("Vui lòng đăng nhập !");
+            }
+            if (!User.IsInRole("Admin"))
+            {
+                return Ok("Bạn không có quyền thực hiện hành động này.");
+            }*/
+
+            return Ok(await service_Authen.GetFullListRole());
+        }
 
     }
 }

@@ -136,7 +136,20 @@ namespace BE_ThuyDuong.Implements
             {
                 if (vnp_ResponseCode == "00" && vnp_TransactionStatus == "00")
                 {
-                    
+                    var Bill = await dbContext.bills.FirstOrDefaultAsync(x => x.Id == Convert.ToInt32(billId));
+                    var removeListProductCart = await dbContext.cards.Where(x => x.UserId == Bill.UserId).ToListAsync();
+                    dbContext.cards.RemoveRange(removeListProductCart);
+                    await dbContext.SaveChangesAsync();
+
+                    foreach(var item in removeListProductCart)
+                    {
+                        var historyPay = new HistorryPay();
+                        historyPay.BillId = Bill.Id;
+                        historyPay.ProductId=item.ProductId;
+                        historyPay.Quantity = item.Quantity;
+                        dbContext.historryPays.Add(historyPay);
+                        await dbContext.SaveChangesAsync();
+                    }
                     return "http://127.0.0.1:5500/home_page.html?checkPay=True";
                 }
                 else
@@ -144,8 +157,8 @@ namespace BE_ThuyDuong.Implements
                     var bill = await dbContext.bills.FirstOrDefaultAsync(x => x.Id == Convert.ToInt32(billId));
 
                     var listHistorypay = await dbContext.historryPays.Where(x => x.BillId == bill.Id).ToListAsync();
-                   
-                     dbContext.historryPays.RemoveRange(listHistorypay);
+
+                    dbContext.historryPays.RemoveRange(listHistorypay);
 
                     dbContext.bills.Remove(bill);
                     await dbContext.SaveChangesAsync();

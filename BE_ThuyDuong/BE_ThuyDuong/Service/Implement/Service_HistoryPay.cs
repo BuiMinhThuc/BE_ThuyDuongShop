@@ -21,6 +21,12 @@ namespace BE_ThuyDuong.Service.Implement
             this.responseBase = responseBase;
         }
 
+        public async Task<IQueryable<DTO_HistoryPay>> GetFullListHistory( int pageSize, int pageNumber)
+        {
+            return await Task.FromResult(dbContext.historryPays.OrderByDescending(x => x.Id)
+                .Skip((pageNumber - 1) * pageSize).Take(pageSize).Select(x => converter_Historypay.EntityToDTO(x)));
+        }
+
         /*public async Task<ResponseBase> CreateHistoryPay(int UserId,List<Request_ListProductPay> request)
         {
            foreach (var item in request)

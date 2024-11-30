@@ -13,5 +13,11 @@ namespace BE_ThuyDuong.Service.Interface
         Task<ResponseObject<DTO_Token>> Login(Request_Login request);
         Task<ResponseObject<DTO_User>> GetUserById(int UserId);
        Task<ResponseObject<DTO_Token>> RenewAccessToken(DTO_Token request);
+
+
+        Task<ResponseObject<DTO_User>> EditRoletUser(Request_EditRoleUser request);
+        Task<IQueryable<DTO_User>> SearchUser(string Key,int pageSize, int pageNumber);
+        Task<IQueryable<DTO_User>> GetFullListUser(int pageSize,int pageNumber);
+        Task<IQueryable<DTO_Role>> GetFullListRole();
     }
 }

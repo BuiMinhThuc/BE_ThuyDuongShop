@@ -51,7 +51,7 @@ namespace BE_ThuyDuong.Service.Implement
 
         public async Task<IQueryable<DTO_Card>> GestListCardForUserId(int userId, int pageSize, int pageNumbeer)
         {
-            return await Task.FromResult(dbContext.cards.Where(x=>x.UserId==userId)
+            return await Task.FromResult(dbContext.cards.OrderByDescending(x => x.Id).Where(x=>x.UserId==userId)
                 .Skip((pageNumbeer-1)*pageSize)
                 .Take(pageSize)
                 .Select( x=>new DTO_Card
@@ -59,8 +59,9 @@ namespace BE_ThuyDuong.Service.Implement
                 {
                     ID= x.Id,
                     UrlImg= dbContext.products.Where(z=>z.Id==x.ProductId).Select(x=>x.UrlImg).FirstOrDefault(),
+                    ProductId= x.ProductId,
                     ProductName= dbContext.products.Where(y=>y.Id==x.ProductId).Select(y=>y.NameProduct).FirstOrDefault(),
-                    TotalPrice= dbContext.products.Where(y => y.Id == x.ProductId).Select(x=>x.Price*x.Quantity).FirstOrDefault(),
+                    TotalPrice= dbContext.products.Where(y => y.Id == x.ProductId).Select(x=>x.Price).FirstOrDefault() * x.Quantity,
                     Quantity= x.Quantity
 
                 })

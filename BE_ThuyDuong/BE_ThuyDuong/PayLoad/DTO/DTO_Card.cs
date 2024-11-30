@@ -3,6 +3,7 @@
     public class DTO_Card
     {
         public int ID { get; set; }
+        public int ProductId { get; set; }
         public string UrlImg {  get; set; }
         public string ProductName {  get; set; }
         public int Quantity { get; set; }

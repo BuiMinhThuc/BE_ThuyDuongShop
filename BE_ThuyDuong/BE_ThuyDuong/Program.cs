@@ -85,6 +85,7 @@ builder.Services.AddControllers();
 
 
 builder.Services.AddScoped<IService_Authen, Service_Authen>();
+builder.Services.AddScoped<IService_FeedBack, Service_FeedBack>();
 builder.Services.AddScoped<IService_Product, Service_Product>();
 builder.Services.AddScoped<IService_Card, Service_Card>();
 builder.Services.AddScoped<IService_HistotyPay, Service_HistoryPay>();
@@ -97,6 +98,7 @@ builder.Services.AddScoped<IService_ProductType, Service_ProductType>();
 
 
 builder.Services.AddScoped<Converter_User>();
+builder.Services.AddScoped<Converter_FeedBack>();
 builder.Services.AddScoped<Converter_ProductType>();
 builder.Services.AddScoped<Converter_Trademark>();
 builder.Services.AddScoped<Converter_Historypay>();
@@ -110,6 +112,7 @@ builder.Services.AddScoped<ResponseObject<DTO_Bill>>();
 builder.Services.AddScoped<ResponseObject<DTO_Product>>();
 builder.Services.AddScoped<ResponseObject<DTO_User>>();
 builder.Services.AddScoped<ResponseObject<DTO_Trademark>>();
+builder.Services.AddScoped<ResponseObject<DTO_FeedBack>>();
 
 
 

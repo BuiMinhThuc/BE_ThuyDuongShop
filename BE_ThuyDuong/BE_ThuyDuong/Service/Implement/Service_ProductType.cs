@@ -47,7 +47,7 @@ namespace BE_ThuyDuong.Service.Implement
 
         public async Task<IQueryable<DTO_ProductType>> GetListProductType(int pageSize, int pageNumber)
         {
-            return await Task.FromResult(dbContext.productTypes.Skip((pageNumber-1)*pageSize).Take(pageSize).Select(x=>converter.EntityToDTO(x)));
+            return await Task.FromResult(dbContext.productTypes.OrderByDescending(x => x.Id).Skip((pageNumber-1)*pageSize).Take(pageSize).Select(x=>converter.EntityToDTO(x)));
         }
 
         public async Task<ResponseObject<DTO_ProductType>> UpdateProductType(Request_UpdateProductType request)
