@@ -62,7 +62,7 @@ namespace BE_ThuyDuong.Service.Implement
         public async Task<IQueryable<DTO_HistoryPay>> GetListHistoryByUserId(int userId,int pageSize, int pageNumber)
         {
            return await Task.FromResult(dbContext.historryPays.Include(x=>x.Bill).AsNoTracking().Where(x=>x.Bill.UserId==userId).Skip((pageNumber-1)*pageSize)
-               .Take(pageSize).Select(x=>converter_Historypay.EntityToDTO(x)));
+               .Take(pageSize).OrderByDescending(x=>x.Id).Select(x=>converter_Historypay.EntityToDTO(x)));
         }
     }
 }

@@ -22,6 +22,7 @@ using BE_ThuyDuong.PayLoad.Request.HistoryPay;
 using BE_ThuyDuong.PayLoad.Response;
 using BE_ThuyDuong.Entities;
 using BE_ThuyDuong.PayLoad.DTO;
+using Newtonsoft.Json;
 
 
 
@@ -59,19 +60,19 @@ namespace BE_ThuyDuong.Implements
             await dbContext.SaveChangesAsync();
             foreach (var item in request)
             {
-               /* var product = await dbContext.products.FirstOrDefaultAsync(x => x.Id == item.ProductId);
-                if (product == null)
-                {
-                    return responseObject.ResponseObjectError(404, $"Sản phẩm có id : {item.ProductId} không tồn tại !",null);
-                }
-                if (product.Quantity < item.Quantity)
-                {
-                    return responseObject.ResponseObjectError(404, $"Sản phẩm có id : {item.ProductId}, tên {product.NameProduct} số lượng chỉ còn {product.Quantity} !",null);
-                }*/
+                /* var product = await dbContext.products.FirstOrDefaultAsync(x => x.Id == item.ProductId);
+                 if (product == null)
+                 {
+                     return responseObject.ResponseObjectError(404, $"Sản phẩm có id : {item.ProductId} không tồn tại !",null);
+                 }
+                 if (product.Quantity < item.Quantity)
+                 {
+                     return responseObject.ResponseObjectError(404, $"Sản phẩm có id : {item.ProductId}, tên {product.NameProduct} số lượng chỉ còn {product.Quantity} !",null);
+                 }*/
                 var historyPay = new HistorryPay();
                 historyPay.Quantity = item.Quantity;
                 historyPay.BillId = bill.Id;
-                historyPay.ProductId= item.ProductId;
+                historyPay.ProductId = item.ProductId;
                 dbContext.historryPays.Add(historyPay);
                 var product = await dbContext.products.FirstOrDefaultAsync(x => x.Id == item.ProductId);
                 TotalPrice += product.Price * (decimal)item.Quantity;
@@ -97,6 +98,7 @@ namespace BE_ThuyDuong.Implements
             vnpay.AddRequestData("vnp_OrderType", "other");
             vnpay.AddRequestData("vnp_ReturnUrl", _configuration["VnPay:ReturnUrl"]);
             vnpay.AddRequestData("vnp_TxnRef", bill.Id.ToString());
+          
 
             string baseUrl = _configuration["VnPay:BaseUrl"];
             string hashSecret = _configuration["VnPay:HashSecret"];
@@ -131,6 +133,7 @@ namespace BE_ThuyDuong.Implements
             string vnp_SecureHash = vnPayLibrary.GetResponseData("vnp_SecureHash");
             double vnp_Amount = Convert.ToDouble(vnPayLibrary.GetResponseData("vnp_Amount"));
             bool check = vnPayLibrary.ValidateSignature(vnp_SecureHash, vnp_HashSecret);
+            
 
             if (check)
             {
@@ -140,8 +143,8 @@ namespace BE_ThuyDuong.Implements
                     var removeListProductCart = await dbContext.cards.Where(x => x.UserId == Bill.UserId).ToListAsync();
                     dbContext.cards.RemoveRange(removeListProductCart);
                     await dbContext.SaveChangesAsync();
-
-                    foreach(var item in removeListProductCart)
+                    
+                   /* foreach(var item in removeListProductCart)
                     {
                         var historyPay = new HistorryPay();
                         historyPay.BillId = Bill.Id;
@@ -149,7 +152,7 @@ namespace BE_ThuyDuong.Implements
                         historyPay.Quantity = item.Quantity;
                         dbContext.historryPays.Add(historyPay);
                         await dbContext.SaveChangesAsync();
-                    }
+                    }*/
                     return "http://127.0.0.1:5500/home_page.html?checkPay=True";
                 }
                 else

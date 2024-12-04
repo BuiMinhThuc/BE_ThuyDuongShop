@@ -33,44 +33,47 @@ namespace BE_ThuyDuong.Service.Implement
                 return responseObject.ResponseObjectError(StatusCodes.Status404NotFound, "Ảnh không hợp lệ !", null);
             }
             var productType = await dbContext.productTypes.FirstOrDefaultAsync(x => x.Id == request.ProductTypeId);
-            if(productType == null)
+            if (productType == null)
             {
                 return responseObject.ResponseObjectError(StatusCodes.Status404NotFound, "Loại sản phẩm không tồn tại !", null);
             }
-            var trademark = await dbContext.trademarks.FirstOrDefaultAsync(x=>x.Id==request.TrademarkId);
-            if( trademark == null)
+            var trademark = await dbContext.trademarks.FirstOrDefaultAsync(x => x.Id == request.TrademarkId);
+            if (trademark == null)
             {
                 return responseObject.ResponseObjectError(StatusCodes.Status404NotFound, "Thương hiệu không tồn tại !", null);
-            }    
-            if(request.UrlImg== null)
+            }
+            if (request.UrlImg == null)
             {
                 return responseObject.ResponseObjectError(StatusCodes.Status404NotFound, "Vui lòng chọn ảnh !", null);
             }
 
-            
+
             CloudinaryService cloudinaryService = new CloudinaryService();
-           
+
             var product = new Product();
             product.NameProduct = request.NameProduct;
-            product.Description= request.Description;
-            product.Price=request.Price;
-            product.Quantity=request.Quantity;
+            product.Description = request.Description;
+            product.Price = request.Price;
+            product.Quantity = request.Quantity;
             product.UrlImg = await cloudinaryService.UploadImage(request.UrlImg);
-            product.ProductTypeId=request.ProductTypeId;
-            product.TrademarkId=request.TrademarkId;
+            product.ProductTypeId = request.ProductTypeId;
+            product.TrademarkId = request.TrademarkId;
             dbContext.products.Add(product);
             await dbContext.SaveChangesAsync();
-            return responseObject.ResponseObjectSucces("Thêm sản phẩm thành công !",coverter_Product.EntityToDTO(product));
+            return responseObject.ResponseObjectSucces("Thêm sản phẩm thành công !", coverter_Product.EntityToDTO(product));
         }
 
         public async Task<ResponseBase> DeleteProduct(int productId)
         {
             var product = await dbContext.products.FirstOrDefaultAsync(x => x.Id == productId);
-            if(product == null)
+            if (product == null)
             {
-                return responseBase.ResponseBaseError(StatusCodes.Status404NotFound,"Sản phẩm không tồn tại !");
+                return responseBase.ResponseBaseError(StatusCodes.Status404NotFound, "Sản phẩm không tồn tại !");
             }
-            dbContext.products.Remove(product); await dbContext.SaveChangesAsync();
+            var listRemovehistorypay = await dbContext.historryPays.Include(x => x.Product).Where(x => x.ProductId == productId).ToListAsync();
+            dbContext.historryPays.RemoveRange(listRemovehistorypay);
+            await dbContext.SaveChangesAsync();
+            dbContext.products.Remove(product);
             await dbContext.SaveChangesAsync();
             return responseBase.ResponseBaseSucces("Xóa sản phẩm thành công !");
 
@@ -79,12 +82,16 @@ namespace BE_ThuyDuong.Service.Implement
 
         public async Task<IQueryable<DTO_Product>> GestListProducts(int pageSize, int pageNumbeer)
         {
-            return await Task.FromResult( dbContext.products.Skip((pageNumbeer-1)*pageSize).Take(pageSize).Select( x=> coverter_Product.EntityToDTO(x)));
+            return await Task.FromResult(dbContext.products.Skip((pageNumbeer - 1) * pageSize).Take(pageSize).Select(x => coverter_Product.EntityToDTO(x)));
         }
 
         public async Task<IQueryable<DTO_Product>> SearchProducts(string keyword, int pageSize, int pageNumbeer)
         {
-            return await Task.FromResult(dbContext.products.OrderByDescending(x => x.Id).Where(x=>x.NameProduct.Contains(keyword)).Skip((pageNumbeer - 1) * pageSize).Take(pageSize).Select(x => coverter_Product.EntityToDTO(x)));
+            return await Task.FromResult(dbContext.products.OrderByDescending(x => x.Id).Include(x => x.ProductType).Include(x => x.Trademark)
+                .Where(x => x.NameProduct.Contains(keyword) || x.ProductType.TypeName.Contains(keyword) || x.Trademark.TradamarkName.Contains(keyword))
+                .Skip((pageNumbeer - 1) * pageSize)
+                .Take(pageSize)
+               .Select(x => coverter_Product.EntityToDTO(x)));
         }
 
         public async Task<ResponseObject<DTO_Product>> UpdateProduct(Request_UpdateProduct request)
@@ -116,7 +123,7 @@ namespace BE_ThuyDuong.Service.Implement
             product.Description = request.Description;
             product.Price = request.Price;
             product.Quantity = request.Quantity;
-           // product.UrlImg = await cloudinaryService.ReplaceImage(product.UrlImg,request.UrlImg);
+            // product.UrlImg = await cloudinaryService.ReplaceImage(product.UrlImg,request.UrlImg);
             product.UrlImg = await cloudinaryService.UploadImage(request.UrlImg);
             product.ProductTypeId = request.ProductTypeId;
             product.TrademarkId = request.TrademarkId;

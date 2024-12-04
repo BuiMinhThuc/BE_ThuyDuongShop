@@ -345,7 +345,7 @@ namespace BE_ThuyDuong.Service.Implement
 
         public async Task<IQueryable<DTO_User>> SearchUser(string Key, int pageSize, int pageNumber)
         {
-            return await Task.FromResult(dbContext.users.OrderByDescending(x => x.Id).Where(x=>x.UserName.Contains(Key) || x.FullName.Contains(Key))
+            return await Task.FromResult(dbContext.users.OrderByDescending(x => x.Id).Where(x=>x.UserName.Contains(Key) || x.FullName.Contains(Key)|| x.PhoneNumber.Contains(Key) || x.Address.Contains(Key)  ) 
                 .Skip((pageNumber - 1) * pageSize).Take(pageSize).Select(x => converter_User.EntityToDTO(x)));
         }
 
